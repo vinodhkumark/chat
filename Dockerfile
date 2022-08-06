@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 ## Installing Node.js
 ENV NODE_ENV production
-ENV NODE_VERSION 14.18.3
+ENV NODE_VERSION 14.19.3
 
 # Node installation based on https://github.com/nodejs/docker-node/blob/66b46292a6e5dd5856b1d5204dc51547c80eb17a/12/buster-slim/Dockerfile
 RUN ARCH=&& dpkgArch="$(dpkg --print-architecture)" \
@@ -53,7 +53,7 @@ RUN groupadd -r rocketchat \
 
 VOLUME /app/uploads
 
-ENV RC_VERSION 4.8.1
+ENV RC_VERSION 5.0.1
 
 WORKDIR /app
 
@@ -77,15 +77,7 @@ RUN set && dpkgArch="$(dpkg --print-architecture)" \
   && tar zxf rocket.chat.tgz \
   && rm rocket.chat.tgz rocket.chat.tgz.asc \
   && cd bundle/programs/server \
-  && npm install --arch=${ARCH} --force \
-   && cd npm/node_modules/sharp \
-   && npm set unsafe-perm true \
-   && npm install --arch=${ARCH} --force \
-   && cd /app/bundle/programs/server/npm/node_modules/bcrypt \
-   && npm install --arch=${ARCH} --force --build-from-source \
-   && cd /app/bundle/programs/server/npm/node_modules/meteor/accounts-password/node_modules/bcrypt \
-   && npm install --arch=${ARCH} --force --build-from-source \
-   && cd /app/bundle/programs/server \
+  && npm install \
   && apt-mark auto '.*' > /dev/null \
   && apt-mark manual $aptMark > /dev/null \
   && find /usr/local -type f -executable -exec ldd '{}' ';' \
