@@ -77,7 +77,15 @@ RUN set && dpkgArch="$(dpkg --print-architecture)" \
   && tar zxf rocket.chat.tgz \
   && rm rocket.chat.tgz rocket.chat.tgz.asc \
   && cd bundle/programs/server \
-  && npm install \
+  && npm install --arch=${ARCH} --force \
+   && cd npm/node_modules/sharp \
+   && npm set unsafe-perm true \
+   && npm install --arch=${ARCH} --force \
+   && cd /app/bundle/programs/server/npm/node_modules/bcrypt \
+   && npm install --arch=${ARCH} --force --build-from-source \
+   && cd /app/bundle/programs/server/npm/node_modules/meteor/accounts-password/node_modules/bcrypt \
+   && npm install --arch=${ARCH} --force --build-from-source \
+   && cd /app/bundle/programs/server \
   && apt-mark auto '.*' > /dev/null \
   && apt-mark manual $aptMark > /dev/null \
   && find /usr/local -type f -executable -exec ldd '{}' ';' \
